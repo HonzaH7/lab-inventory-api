@@ -2,11 +2,11 @@ POST http://localhost:8080/reagents
 Content-Type: application/json
 
 {
-  "name": "Kyselina chlorovodíková",
-  "category": "ACID",
-  "amount": 100,
+  "name": "Hydroxid sodný",
+  "category": "BASE",
+  "amount": 300,
   "unit": "ML",
-  "expiration": "2027-06-01"
+  "expiration": "2027-02-01"
 }
 
 ###

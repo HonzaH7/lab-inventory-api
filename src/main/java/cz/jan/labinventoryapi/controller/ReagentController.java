@@ -1,6 +1,7 @@
 package cz.jan.labinventoryapi.controller;
 
 import cz.jan.labinventoryapi.dto.ReagentRequest;
+import cz.jan.labinventoryapi.dto.ReagentResponse;
 import cz.jan.labinventoryapi.model.Reagent;
 import cz.jan.labinventoryapi.service.ReagentService;
 import org.springframework.http.HttpStatus;
@@ -20,26 +21,28 @@ public class ReagentController {
     }
 
     @GetMapping
-    public List<Reagent> getAll() {
-        return service.findAll();
+    public List<ReagentResponse> getAll() {
+        return service.findAll().stream().map(ReagentResponse::from).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reagent> getById(@PathVariable Long id) {
+    public ResponseEntity<ReagentResponse> getById(@PathVariable Long id) {
         return service.findById(id)
+                .map(ReagentResponse::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Reagent> create(@RequestBody ReagentRequest request) {
+    public ResponseEntity<ReagentResponse> create(@RequestBody ReagentRequest request) {
         Reagent created = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ReagentResponse.from(created));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reagent> update(@PathVariable Long id, @RequestBody ReagentRequest request) {
+    public ResponseEntity<ReagentResponse> update(@PathVariable Long id, @RequestBody ReagentRequest request) {
         return service.update(id, request)
+                .map(ReagentResponse::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
 
@@ -58,7 +61,7 @@ public class ReagentController {
 
 /*
 @GetMapping("/{id}")
-public ResponseEntity<Reagent> getById(@PathVariable Long id) {
+public ResponseEntity<ReagentResponse> getById(@PathVariable Long id) {
     Optional<Reagent> found = service.findById(id);
 
     if (found.isPresent()) {
