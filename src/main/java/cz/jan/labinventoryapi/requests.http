@@ -1,0 +1,25 @@
+POST http://localhost:8080/reagents
+Content-Type: application/json
+
+{
+  "name": "Kyselina chlorovodíková",
+  "category": "ACID",
+  "amount": 100,
+  "unit": "ML",
+  "expiration": "2027-06-01"
+}
+
+###
+PUT http://localhost:8080/reagents/1
+Content-Type: application/json
+
+{
+  "name": "Kyselina sírová 96%",
+  "category": "ACID",
+  "amount": 480,
+  "unit": "ML",
+  "expiration": "2027-03-01"
+}
+###
+
+DELETE http://localhost:8080/reagents/2
