@@ -23,3 +23,15 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/reagents/2
+
+###
+
+POST http://localhost:8080/reagents
+Content-Type: application/json
+
+{
+  "name": "",
+  "category": "ACID",
+  "amount": -5,
+  "unit": "ML"
+}

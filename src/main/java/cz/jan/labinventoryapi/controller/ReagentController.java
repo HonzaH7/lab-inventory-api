@@ -4,6 +4,7 @@ import cz.jan.labinventoryapi.dto.ReagentRequest;
 import cz.jan.labinventoryapi.dto.ReagentResponse;
 import cz.jan.labinventoryapi.model.Reagent;
 import cz.jan.labinventoryapi.service.ReagentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,35 +27,25 @@ public class ReagentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReagentResponse> getById(@PathVariable Long id) {
-        return service.findById(id)
-                .map(ReagentResponse::from)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ReagentResponse getById(@PathVariable Long id) {
+        return ReagentResponse.from(service.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ReagentResponse> create(@RequestBody ReagentRequest request) {
+    public ResponseEntity<ReagentResponse> create(@Valid @RequestBody ReagentRequest request) {
         Reagent created = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ReagentResponse.from(created));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReagentResponse> update(@PathVariable Long id, @RequestBody ReagentRequest request) {
-        return service.update(id, request)
-                .map(ReagentResponse::from)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-
+    public ReagentResponse update(@PathVariable Long id, @Valid @RequestBody ReagentRequest request) {
+        return ReagentResponse.from(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (service.findById(id).isPresent()) {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)                  // vždy 204 → @ResponseStatus + void
+    public void delete(@PathVariable Long id) {
+        service.deleteById(id);
     }
 
 }

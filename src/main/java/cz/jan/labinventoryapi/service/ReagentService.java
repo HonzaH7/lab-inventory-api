@@ -1,6 +1,7 @@
 package cz.jan.labinventoryapi.service;
 
 import cz.jan.labinventoryapi.dto.ReagentRequest;
+import cz.jan.labinventoryapi.exception.ReagentNotFoundException;
 import cz.jan.labinventoryapi.model.Category;
 import cz.jan.labinventoryapi.model.Reagent;
 import cz.jan.labinventoryapi.model.Unit;
@@ -23,12 +24,13 @@ public class ReagentService {
         seed();
     }
 
-    public List<Reagent> findAll() {
-        return repository.findAll();
+    public Reagent getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ReagentNotFoundException(id));
     }
 
-    public Optional<Reagent> findById(Long id) {
-        return repository.findById(id);
+    public List<Reagent> findAll() {
+        return repository.findAll();
     }
 
     public Reagent create(ReagentRequest request) {
@@ -42,14 +44,12 @@ public class ReagentService {
     }
 
     public void deleteById(Long id) {
+        getById(id);
         repository.deleteById(id);
     }
 
-    public Optional<Reagent> update(Long id, ReagentRequest request) {
-        if (repository.findById(id).isEmpty()) {
-            return Optional.empty();
-        }
-
+    public Reagent update(Long id, ReagentRequest request) {
+        getById(id);
         Reagent updated = new Reagent(
                 id,
                 request.name(),
@@ -58,9 +58,8 @@ public class ReagentService {
                 request.unit(),
                 request.expiration()
         );
-
-        repository.save(updated.getId(), updated);
-        return Optional.of(updated);
+        repository.save(id, updated);
+        return updated;
     }
 
     private Reagent create(String name, Category category, double amount, Unit unit, LocalDate expiration) {
