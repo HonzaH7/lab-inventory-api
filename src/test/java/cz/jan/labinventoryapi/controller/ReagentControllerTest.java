@@ -14,22 +14,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReagentController.class)
 class ReagentControllerTest {
-
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @MockitoBean
-    private ReagentService service;
+    ReagentService service;
 
     @Test
     void getById_returnsReagent_whenFound() throws Exception {
-        Reagent reagent = new Reagent(1L, "Kyselina sírová", Category.ACID, 500, Unit.ML,
-                LocalDate.of(2027, 1, 1));
+        Reagent reagent = new Reagent(1L,
+                "Kyselina sírová",
+                Category.ACID, 500,
+                Unit.ML,
+                LocalDate.of(2027, 1, 1)
+        );
         given(service.getById(1L)).willReturn(reagent);
 
         mockMvc.perform(get("/reagents/1"))
@@ -44,5 +49,13 @@ class ReagentControllerTest {
 
         mockMvc.perform(get("/reagents/99"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_returns204_whenReagentExists() throws Exception {
+            mockMvc.perform(delete("/reagents/1"))
+                    .andExpect(status().isNoContent());
+
+            verify(service).deleteById(1L);
     }
 }
