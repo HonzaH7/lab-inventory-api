@@ -6,11 +6,11 @@ import cz.jan.labinventoryapi.model.Category;
 import cz.jan.labinventoryapi.model.Reagent;
 import cz.jan.labinventoryapi.model.Unit;
 import cz.jan.labinventoryapi.repository.ReagentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -19,9 +19,12 @@ public class ReagentService {
     private final ReagentRepository repository;
     private final AtomicLong sequence = new AtomicLong(0);
 
-    public ReagentService(ReagentRepository repository) {
+    public ReagentService(ReagentRepository repository,
+                          @Value("${lab.seed-data:false}") boolean seedData) {
         this.repository = repository;
-        seed();
+        if (seedData) {
+            seed();
+        }
     }
 
     public Reagent getById(Long id) {
