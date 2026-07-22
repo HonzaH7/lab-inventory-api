@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -29,12 +30,13 @@ class ReagentControllerTest {
 
     @Test
     void getById_returnsReagent_whenFound() throws Exception {
-        Reagent reagent = new Reagent(1L,
+        Reagent reagent = new Reagent(
                 "Kyselina sírová",
                 Category.ACID, 500,
                 Unit.ML,
                 LocalDate.of(2027, 1, 1)
         );
+        ReflectionTestUtils.setField(reagent, "id", 1L);
         given(service.getById(1L)).willReturn(reagent);
 
         mockMvc.perform(get("/reagents/1"))

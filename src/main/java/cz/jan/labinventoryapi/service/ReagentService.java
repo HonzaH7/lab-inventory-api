@@ -6,25 +6,19 @@ import cz.jan.labinventoryapi.model.Category;
 import cz.jan.labinventoryapi.model.Reagent;
 import cz.jan.labinventoryapi.model.Unit;
 import cz.jan.labinventoryapi.repository.ReagentRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ReagentService {
 
     private final ReagentRepository repository;
-    private final AtomicLong sequence = new AtomicLong(0);
 
-    public ReagentService(ReagentRepository repository,
-                          @Value("${lab.seed-data:false}") boolean seedData) {
+    public ReagentService(ReagentRepository repository) {
         this.repository = repository;
-        if (seedData) {
-            seed();
-        }
     }
 
     public Reagent getById(Long id) {
@@ -36,6 +30,8 @@ public class ReagentService {
         return repository.findAll();
     }
 
+
+    @Transactional
     public Reagent create(ReagentRequest request) {
         return create(
                 request.name(),
@@ -46,34 +42,27 @@ public class ReagentService {
         );
     }
 
+    @Transactional
     public void deleteById(Long id) {
         getById(id);
         repository.deleteById(id);
     }
 
+    @Transactional
     public Reagent update(Long id, ReagentRequest request) {
-        getById(id);
-        Reagent updated = new Reagent(
-                id,
-                request.name(),
-                request.category(),
-                request.amount(),
-                request.unit(),
-                request.expiration()
-        );
-        repository.save(id, updated);
-        return updated;
+        Reagent reagent = getById(id);
+        reagent.setName(request.name());
+        reagent.setCategory(request.category());
+        reagent.setAmount(request.amount());
+        reagent.setUnit(request.unit());
+        reagent.setExpiration(request.expiration());
+
+        return repository.save(reagent);
     }
 
     private Reagent create(String name, Category category, double amount, Unit unit, LocalDate expiration) {
-        Long id = sequence.incrementAndGet();
-        Reagent reagent = new Reagent(id, name, category, amount, unit, expiration);
-        repository.save(id, reagent);
-        return reagent;
-    }
+        Reagent reagent = new Reagent(name, category, amount, unit, expiration);
 
-    private void seed() {
-        create("Kyselina sírová", Category.ACID, 500, Unit.ML, LocalDate.of(2027, 1, 1));
-        create("Hydroxid sodný", Category.BASE, 250, Unit.G, LocalDate.of(2026, 12, 31));
+        return repository.save(reagent);
     }
 }

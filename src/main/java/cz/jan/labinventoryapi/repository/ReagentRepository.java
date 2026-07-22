@@ -1,8 +1,8 @@
 package cz.jan.labinventoryapi.repository;
 
 import cz.jan.labinventoryapi.model.Reagent;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class ReagentRepository extends InMemoryRepository<Long, Reagent> {
+
+public interface ReagentRepository extends JpaRepository<Reagent, Long> {
 }
