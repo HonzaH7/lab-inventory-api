@@ -35,3 +35,7 @@ Content-Type: application/json
   "amount": -5,
   "unit": "ML"
 }
+
+###
+GET http://localhost:8080/reagents
+Content-Type: application/json

@@ -1,2 +1,3 @@
-lab:
-  seed-data: true
+logging:
+  level:
+   org.hibernate.SQL: DEBUG
