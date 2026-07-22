@@ -1,6 +1,13 @@
 spring:
   application:
     name: lab-inventory-api
-
-lab:
-  seed-data: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lab_inventory
+    username: labadmin
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
