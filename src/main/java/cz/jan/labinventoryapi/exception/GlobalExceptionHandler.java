@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleNotFound(ReagentNotFoundException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);   // 404 + zpráva
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
 }

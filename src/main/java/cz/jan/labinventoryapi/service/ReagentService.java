@@ -61,8 +61,6 @@ public class ReagentService {
     }
 
     private Reagent create(String name, Category category, double amount, Unit unit, LocalDate expiration) {
-        Reagent reagent = new Reagent(name, category, amount, unit, expiration);
-
-        return repository.save(reagent);
+        return repository.save(new Reagent(name, category, amount, unit, expiration));
     }
 }

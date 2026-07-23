@@ -49,16 +49,3 @@ public class ReagentController {
     }
 
 }
-
-/*
-@GetMapping("/{id}")
-public ResponseEntity<ReagentResponse> getById(@PathVariable Long id) {
-    Optional<Reagent> found = service.findById(id);
-
-    if (found.isPresent()) {
-        return ResponseEntity.ok(found.get());      // MÁM → 200 OK + reagent
-    } else {
-        return ResponseEntity.notFound().build();   // NEMÁM → 404 Not Found
-    }
-}
- */
